@@ -9,7 +9,7 @@ export default function NavBar({ logged }: { logged: boolean }) {
         <div>
           <Link
             href="/"
-            className="text-xl font-bold tracking-wide text-amber-300 hover:text-amber-400 transition"
+            className="text-xl font-bold tracking-wide text-amber-400 hover:text-amber-300 transition"
           >
             FAD Grassi
           </Link>
