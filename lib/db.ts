@@ -15,16 +15,4 @@ const sequelize = new Sequelize(
   }
 );
 
-export const connect_DB = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Succesfully connected to PostgreSQL database');
-
-    await sequelize.sync({ alter: process.env.NEXT_ENV! === "dev" });
-    console.log('Succesfully syncronized the tabeles');
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 export default sequelize;

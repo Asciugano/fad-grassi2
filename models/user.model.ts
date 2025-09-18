@@ -1,7 +1,16 @@
 import sequelize from "@/lib/db"
-import { DataTypes } from "sequelize"
+import { Role } from "@/lib/types";
+import { DataTypes, Model } from "sequelize"
 
-const User = sequelize.define("users", {
+class User extends Model {
+  public id!: string;
+  public username!: string;
+  public email!: string;
+  public password!: string;
+  public role!: Role
+}
+
+User.init({
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -39,8 +48,6 @@ const User = sequelize.define("users", {
     type: DataTypes.ENUM('studente', 'insegnante', 'admin'),
     allowNull: false,
   }
-}, {
-  timestamps: true,
-});
+}, { timestamps: true, sequelize, modelName: "users" });
 
 export default User;
