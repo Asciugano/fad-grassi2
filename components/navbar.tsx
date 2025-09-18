@@ -1,4 +1,4 @@
-import { User, BookOpen, ClipboardList, LogIn, LogOut } from "lucide-react";
+import { User, BookOpen, ClipboardList, LogIn, LogOut, Megaphone } from "lucide-react";
 import Link from "next/link";
 
 export default function NavBar({ logged }: { logged: boolean }) {
@@ -40,6 +40,13 @@ export default function NavBar({ logged }: { logged: boolean }) {
           >
             <ClipboardList size={18} />
             <span>Compiti</span>
+          </Link>
+          <Link
+            href='/news'
+            className="flex items-center gap-1 hover:text-amber-400 transition"
+          >
+            <Megaphone size={18} />
+            <span>Annunci</span>
           </Link>
 
           {/* Login o Logout */}
