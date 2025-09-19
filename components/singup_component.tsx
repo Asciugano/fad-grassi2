@@ -1,56 +1,46 @@
 "use client";
 
-import axios, { AxiosError } from "axios";
-import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Mail, Loader2, Lock, Eye, EyeOff, User, ChevronDown, ClipboardList, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import RoleDropDown from "./ui/dropDownRole";
 
-export default function LoginComponent() {
+export default function SingupComponent() {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
+    role: "",
   });
   const [showPassw, setShowPassw] = useState(false);
 
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    setLoading(true);
-    try {
-      await axios.post('/api/auth/login', formData);
-
-      localStorage.setItem("logged", "true");
-      window.location.reload();
-      router.push('/');
-    } catch (e) {
-      console.error(e);
-
-      const err = e as AxiosError<{ message?: string }>;
-
-      if (err.response?.data.message)
-        setError(err.response.data.message);
-      else if (typeof err.response?.data === "string")
-        setError(err.response.data);
-      else
-        setError("Ops... Qualcosa e' andato storto");
-    } finally {
-      setLoading(false);
-    }
+    e.preventDefault()
   }
 
   return (
     <div className="max-w-md w-full bg-neutral-300 dark:bg-neutral-800 rounded-2xl shadow-lg p-6">
       <h2 className="text-2xl font-bold text-center mb-6">
-        Accedi
+        Registrati
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* username */}
+        <div className="flex items-center gap-3 border-neutral-400 dark:border-neutral-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus-within:ring-amber-400">
+          <User size={20} className="text-neutral-500 dark:text-neutral-400" />
+          <input
+            type="text"
+            placeholder="Username"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            className="w-full bg-transparent outline-none text-neutral-800 dark:text-neutral-100 placeholder-neutral-500"
+            required
+          />
+        </div>
+
         {/* email */}
         <div className="flex items-center gap-3 border-neutral-400 dark:border-neutral-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus-within:ring-amber-400">
           <Mail size={20} className="text-neutral-500 dark:text-neutral-400" />
@@ -63,6 +53,12 @@ export default function LoginComponent() {
             required
           />
         </div>
+
+        {/* role */}
+        <RoleDropDown
+          value={formData.role}
+          onChange={(role) => setFormData({ ...formData, role })}
+        />
 
         {/* password */}
         <div className="flex items-center gap-3 border-neutral-400 dark:border-neutral-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus-within:ring-amber-400">
@@ -96,7 +92,7 @@ export default function LoginComponent() {
           )}
         </button>
       </form>
-      <p className="text-sm text-center mt-8">Non hai un&apos;Account? <Link href="/auth/singup" className="text-sm text-amber-400">Crealo</Link></p>
+      <p className="text-sm text-center mt-8">Hai un&apos;Account? <Link href="/auth/login" className="text-sm text-amber-400">Accedi</Link></p>
     </div>
   );
 }
