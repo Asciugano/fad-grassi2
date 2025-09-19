@@ -1,6 +1,8 @@
 "use client";
 
-import { Eye, EyeOff, Loader2, Lock, User } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginComponent() {
@@ -13,8 +15,30 @@ export default function LoginComponent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setLoading(true);
+    try {
+      await axios.post('/api/auth/login', formData);
+
+      router.push('/');
+    } catch (e) {
+      console.error(e);
+
+      const err = e as AxiosError<{ message?: string }>;
+
+      if (err.response?.data.message)
+        setError(err.response.data.message);
+      else if (typeof err.response?.data === "string")
+        setError(err.response.data);
+      else
+        setError("Ops... Qualcosa e' andato storto");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -26,7 +50,7 @@ export default function LoginComponent() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* email */}
         <div className="flex items-center gap-3 border-neutral-400 dark:border-neutral-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-900 focus-within:ring-amber-400">
-          <User size={20} className="text-neutral-500 dark:text-neutral-400" />
+          <Mail size={20} className="text-neutral-500 dark:text-neutral-400" />
           <input
             type="email"
             placeholder="Email"
@@ -48,19 +72,20 @@ export default function LoginComponent() {
             className="w-full bg-transparent outline-none text-neutral-800 dark:text-neutral-100 placeholder-neutral-500"
             required
           />
-          <button onClick={(e) => {
-            e.preventDefault();
-            setShowPassw(!showPassw);
-          }}
+          <button onClick={() => setShowPassw(!showPassw)} className="absolute right-3 top-1/2 -translate-y-1/2" type="button"
           >
             {showPassw ? <Eye size={18} /> : <EyeOff size={18} />}
           </button>
         </div>
 
+        {(error && error.length > 0) && (
+          <p className="text-sm text-red-500 text-center">{error}</p>
+        )}
+
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center bg-amber-500 hover:bg-amber-400 text-white font-semibold rounded-lg px-4 py-2 transition disabled:cursor-not-allowed"
+          className="mt-8 w-full flex items-center justify-center bg-amber-500 hover:bg-amber-400 text-white font-semibold rounded-lg px-4 py-2 transition disabled:cursor-not-allowed"
         >
           {loading ? (
             <Loader2 size={20} className="animate-spin" />
