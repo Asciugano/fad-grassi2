@@ -52,7 +52,7 @@ export default function NavBar({ logged }: { logged: boolean }) {
           {/* Login o Logout */}
           {!logged ? (
             <Link
-              href="/login"
+              href="/auth/login"
               className="flex items-center gap-1 px-4 py-2 text-white rounded-lg bg-amber-400 hover:bg-amber-300 transition"
             >
               <LogIn size={18} />
