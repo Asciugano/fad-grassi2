@@ -1,7 +1,30 @@
+"use client";
+
+import axios from "axios";
 import { User, BookOpen, ClipboardList, LogIn, LogOut, Megaphone } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function NavBar({ logged }: { logged: boolean }) {
+export default function NavBar() {
+  const [logged, setLogged] = useState(false)
+
+  useEffect(() => {
+    axios.get('/api/auth/login')
+      .then((res) => setLogged(res.data.logged))
+      .catch(() => setLogged(false));
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.get('/api/auth/logout');
+      setLogged(false);
+    } catch (e) {
+      console.error(e);
+    }
+
+    window.location.href = '/';
+  }
+
   return (
     <nav className="mx-4 my-4 rounded-xl bg-neutral-200 dark:bg-neutral-900 shadow-lg">
       <div className="flex items-center justify-between px-6 py-3">
@@ -59,13 +82,13 @@ export default function NavBar({ logged }: { logged: boolean }) {
               <span>Login</span>
             </Link>
           ) : (
-            <Link
-              href="/logout"
+            <button
+              onClick={handleLogout}
               className="flex items-center gap-1 px-4 py-2 text-white rounded-lg bg-red-600 hover:bg-red-500 transition"
             >
               <LogOut size={18} />
               <span>Logout</span>
-            </Link>
+            </button>
           )}
         </div>
       </div>

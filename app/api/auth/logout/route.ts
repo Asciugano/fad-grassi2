@@ -16,6 +16,7 @@ export async function GET() {
     return NextResponse.json({ error: true, message: "Impossibile trovare il tuo Account" }, { status: 404 });
 
   const cookieStore = cookies();
-  (await cookieStore).set("jwt", "");
-  return NextResponse.json({ message: "Logout effettuato" });
+  (await cookieStore).set("jwt", "", { maxAge: 0 });
+
+  return NextResponse.json({ logged: true });
 }

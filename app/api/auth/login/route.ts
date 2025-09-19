@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/utils";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
   const { email, password } = await req.json();
@@ -22,4 +23,11 @@ export async function POST(req: Request) {
   res.cookies.set("jwt", token);
 
   return res;
+}
+
+export async function GET() {
+  const cookiesStore = cookies();
+  const token = (await cookiesStore).get("jwt");
+
+  return NextResponse.json({ logged: !!token });
 }

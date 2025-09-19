@@ -24,6 +24,8 @@ export default function LoginComponent() {
     try {
       await axios.post('/api/auth/login', formData);
 
+      localStorage.setItem("logged", "true");
+      window.location.reload();
       router.push('/');
     } catch (e) {
       console.error(e);
@@ -72,8 +74,7 @@ export default function LoginComponent() {
             className="w-full bg-transparent outline-none text-neutral-800 dark:text-neutral-100 placeholder-neutral-500"
             required
           />
-          <button onClick={() => setShowPassw(!showPassw)} className="absolute right-3 top-1/2 -translate-y-1/2" type="button"
-          >
+          <button onClick={() => setShowPassw(!showPassw)} type="button">
             {showPassw ? <Eye size={18} /> : <EyeOff size={18} />}
           </button>
         </div>
