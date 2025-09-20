@@ -20,5 +20,6 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json({ createdCourses, enrollments });
+  const allCourses = [...createdCourses, ...enrollments];
+  return NextResponse.json({ createdCourses, enrollments, allCourses });
 }
