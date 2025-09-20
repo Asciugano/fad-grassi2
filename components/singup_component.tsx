@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Loader2, Lock, Eye, EyeOff, User, ChevronDown, ClipboardList, ShieldCheck } from "lucide-react";
+import { Mail, Loader2, Lock, Eye, EyeOff, User } from "lucide-react";
 import Link from "next/link";
 import RoleDropDown from "./ui/dropDownRole";
+import axios, { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 export default function SingupComponent() {
   const [formData, setFormData] = useState({
@@ -16,9 +18,29 @@ export default function SingupComponent() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    setLoading(true);
+    try {
+      await axios.post('/api/auth/singup', formData)
+
+      localStorage.setItem("logged", "true");
+      window.location.reload()
+      router.push("/")
+    } catch (e) {
+      const err = e as AxiosError<{ message?: string }>;
+      if (err.response?.data.message)
+        setError(err.response.data.message);
+      else if (typeof err.response?.data === "string")
+        setError(err.response.data);
+      else
+        setError("Ops... Qaulcosa e' andato storto");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
