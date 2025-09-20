@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getUserIDFromToken } from "@/lib/utils";
+import { generateUniqueCourseCode, getUserIDFromToken } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -11,10 +11,13 @@ export async function POST(req: Request) {
   if (!name)
     return NextResponse.json({ error: true, message: "Devi dare un nome al corso" }, { status: 400 });
 
+  const code = await generateUniqueCourseCode();
+
   const course = await prisma.course.create({
     data: {
       name,
-      teacherId: userId
+      teacherId: userId,
+      code
     },
   });
 

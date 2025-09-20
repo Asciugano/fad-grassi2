@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { prisma } from "./prisma";
 
 export async function generateToken(userID: string) {
   const token = await jwt.sign({ userID }, process.env.JWT_SECRET, {
@@ -22,4 +23,27 @@ export async function getUserIDFromToken() {
     console.error(e);
     return null;
   }
+}
+
+function generateCourseCode(len = 6) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < len; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return code;
+}
+
+export async function generateUniqueCourseCode() {
+  let code;
+  let exsist = true;
+
+  while (exsist) {
+    code = generateCourseCode();
+    const course = await prisma.course.findUnique({ where: { code } });
+    exsist = !!course
+  }
+
+  return code!;
 }
