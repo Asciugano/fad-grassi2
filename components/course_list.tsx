@@ -3,7 +3,7 @@
 import axios, { AxiosError } from "axios";
 import { Course, User } from "@/lib/generated/prisma";
 import { useEffect, useState } from "react";
-import { Loader2, PencilRuler } from "lucide-react";
+import { Loader2, LogIn, PencilRuler } from "lucide-react";
 import Link from "next/link";
 
 export function CoursesList() {
@@ -77,9 +77,9 @@ export function CoursesList() {
       </div>
 
       {user && (
-        <div>
+        <div className="sticky bottom-4 flex items-center justify-center gap-3 mt-8">
           {user.role !== "STUDENTE" && (
-            <div className="sticky bottom-4 flex items-center justify-center mt-8">
+            <div className="">
               <Link
                 href="/courses/new"
                 className="flex items-center gap-3 bg-amber-400 hover:bg-amber-300 text-white rounded-lg shadow-md px-4 py-2">
@@ -88,6 +88,13 @@ export function CoursesList() {
               </Link>
             </div>
           )}
+          <Link
+            href="/courses/join"
+            className="flex items-center gap-3 bg-amber-400 hover:bg-amber-300 text-white rounded-lg shadow-md px-4 py-2"
+          >
+            <LogIn size={18} />
+            Entra in un corso
+          </Link>
         </div>
       )}
     </div>
