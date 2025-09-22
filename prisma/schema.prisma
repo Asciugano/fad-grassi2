@@ -83,6 +83,7 @@ model Course {
   name       String
   created_at DateTime @default(now())
   code       String   @unique
+  password   String?
 
   teacher   User   @relation("CourseTeacher", fields: [teacherId], references: [id])
   teacherId String

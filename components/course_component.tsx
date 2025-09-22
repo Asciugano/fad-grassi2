@@ -3,10 +3,16 @@ import { prisma } from "@/lib/prisma";
 import HomeworksList from "./homeworks_components";
 import { BookOpen, ChevronLeft, Users } from "lucide-react";
 import Link from "next/link";
+import { getUserIDFromToken } from "@/lib/utils";
 
 export default async function CourseComponent({ course }: { course: Course }) {
   const teacher = await prisma.user.findUnique({ where: { id: course.teacherId } })
   const homeworks = await prisma.homeWork.findMany({ where: { courseId: course.id } });
+
+  const userId = await getUserIDFromToken();
+  let user = null;
+  if (userId)
+    user = await prisma.user.findUnique({ where: { id: userId } })
 
   return (
     <div>
@@ -57,6 +63,11 @@ export default async function CourseComponent({ course }: { course: Course }) {
             <p className="text-sm text-neutral-500">Non ci sono Compiti</p>
           )}
         </div>
+        {(user && user.role !== "STUDENTE") && (
+          <div>
+            <p className="text-sm text-center font-semibold text-neutral-600 dark:text-neutral-400">Code: <span className="text-amber-400">{course.code}</span></p>
+          </div>
+        )}
       </div>
     </div>
   );

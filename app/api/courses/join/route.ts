@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { getUserIDFromToken } from "@/lib/utils";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { code } = await req.json();
+  const { code, password } = await req.json();
 
   if (!code)
     return NextResponse.json({ error: true, message: "Devi inserire il codice del corso per entrare" }, { status: 400 });
@@ -27,6 +28,18 @@ export async function POST(req: Request) {
 
   if (alreadyEnrolled)
     return NextResponse.json({ error: true, message: "Sei gia' inscritto a questo corso" }, { status: 400 });
+
+  if (course.password !== null) {
+    if (!password || password.length < 0)
+      return NextResponse.json({ error: true, message: "Questo corso richiede una password" }, { status: 400 });
+
+    const isPasswordCorrect = await bcrypt.compare(password, course.password);
+    if (!isPasswordCorrect)
+      return NextResponse.json({ error: true, message: "Credenziali invalide" }, { status: 401 });
+  } else {
+    if (password && password.length > 0)
+      return NextResponse.json({ error: "Credenziali non valide" }, { status: 401 });
+  }
 
   await prisma.enrollment.create({
     data: {

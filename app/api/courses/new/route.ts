@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { generateUniqueCourseCode, getUserIDFromToken } from "@/lib/utils";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { name } = await req.json();
+  const { name, password } = await req.json();
   const userId = await getUserIDFromToken();
 
   if (!userId)
@@ -19,12 +20,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: true, message: "Devi dare un nome al corso" }, { status: 400 });
 
   const code = await generateUniqueCourseCode();
+  let hashedPassword = null;
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
 
   const course = await prisma.course.create({
     data: {
       name,
       teacherId: userId,
-      code
+      code,
+      password: hashedPassword,
     },
   });
 
