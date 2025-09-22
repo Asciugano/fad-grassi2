@@ -31,10 +31,11 @@ export function CoursesList() {
       })
       .finally(() => setLoading(false));
 
-    axios.post("/api/auth/me")
+    axios.post("/api/auth/me", {})
       .then((res) => res.data)
-      .then((data) => setUser(data))
+      .then((data) => setUser(data.user))
       .catch((e) => {
+        setUser(null);
         const err = e as AxiosError<{ message: string }>;
 
         if (err.response?.data.message)
@@ -44,6 +45,7 @@ export function CoursesList() {
         else
           setError("Ops... Qualcosa e' andato storto");
       });
+
   }, []);
 
   if (loading || error)
