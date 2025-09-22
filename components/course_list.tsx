@@ -67,7 +67,7 @@ export function CoursesList() {
           <div className="w-full">
             {courses.map((course) => (
               <Link
-                key={course.code}
+                key={course.id}
                 href={`/courses/${course.name}`}
                 className="text-2xl font-bold text-amber-400 bg-neutral-100 dark:bg-neutral-950 rounded-lg shadow-lg px-6 py-2 w-full"
               >

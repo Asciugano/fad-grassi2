@@ -29,6 +29,9 @@ export async function POST(req: Request) {
   if (alreadyEnrolled)
     return NextResponse.json({ error: true, message: "Sei gia' inscritto a questo corso" }, { status: 400 });
 
+  if (userId === course.teacherId)
+    return NextResponse.json({ error: true, message: "Hai creato tu questo corso" }, { status: 400 });
+
   if (course.password !== null) {
     if (!password || password.length < 0)
       return NextResponse.json({ error: true, message: "Questo corso richiede una password" }, { status: 400 });
