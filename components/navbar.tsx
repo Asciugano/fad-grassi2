@@ -20,6 +20,7 @@ export default function NavBar() {
       setLogged(false);
     } catch (e) {
       console.error(e);
+      // window.cookieStore.delete("jwt");
     }
 
     window.location.href = '/';
