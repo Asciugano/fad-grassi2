@@ -1,3 +1,4 @@
+import { UserRole } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { generateUniqueCourseCode, getUserIDFromToken } from "@/lib/utils";
 import bcrypt from "bcryptjs";
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user)
     return NextResponse.json({ error: true, message: "Devi essere loggato per creare un corso" }, { status: 401 });
-  if (user.role === "STUDENTE")
+  if (user.role === UserRole.STUDENTE)
     return NextResponse.json({ error: true, message: "Gli studenti non possono creare corsi" }, { status: 400 });
 
   if (!name)

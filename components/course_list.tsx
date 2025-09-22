@@ -1,7 +1,7 @@
 "use client";
 
 import axios, { AxiosError } from "axios";
-import { Course, User } from "@/lib/generated/prisma";
+import { Course, User, UserRole } from "@/lib/generated/prisma";
 import { useEffect, useState } from "react";
 import { Loader2, LogIn, PencilRuler } from "lucide-react";
 import Link from "next/link";
@@ -43,7 +43,7 @@ export function CoursesList() {
           setError(err.response.data);
         else
           setError("Ops... Qualcosa e' andato storto");
-      })
+      });
   }, []);
 
   if (loading || error)
@@ -78,7 +78,7 @@ export function CoursesList() {
 
       {user && (
         <div className="sticky bottom-4 flex items-center justify-center gap-3 mt-8">
-          {user.role !== "STUDENTE" && (
+          {user.role !== UserRole.STUDENTE && (
             <div className="">
               <Link
                 href="/courses/new"

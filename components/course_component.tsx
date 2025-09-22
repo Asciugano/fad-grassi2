@@ -1,4 +1,4 @@
-import { Course } from "@/lib/generated/prisma";
+import { Course, UserRole } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import HomeworksList from "./homeworks_components";
 import { BookOpen, ChevronLeft, Users } from "lucide-react";
@@ -63,7 +63,7 @@ export default async function CourseComponent({ course }: { course: Course }) {
             <p className="text-sm text-neutral-500">Non ci sono Compiti</p>
           )}
         </div>
-        {(user && user.role !== "STUDENTE") && (
+        {(user && user.role !== UserRole.STUDENTE) && (
           <div>
             <p className="text-sm text-center font-semibold text-neutral-600 dark:text-neutral-400">Code: <span className="text-amber-400">{course.code}</span></p>
           </div>
