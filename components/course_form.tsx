@@ -95,7 +95,7 @@ export default function CourseForm({ create }: { create: boolean }) {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            {!showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
 

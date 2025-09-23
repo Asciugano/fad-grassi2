@@ -26,7 +26,9 @@ export default async function ProfilePage() {
           </p>
         </div>
       </div>
-      <UserFormComponent user={user} />
+      <div className="flex items-center justify-center mt-8">
+        <UserFormComponent user={user} />
+      </div>
     </div>
   );
 }
