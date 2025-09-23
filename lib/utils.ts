@@ -21,6 +21,8 @@ export async function getUserIDFromToken() {
     return decoded.userID;
   } catch (e) {
     console.error(e);
+    const cookiesStore = cookies();
+    (await cookiesStore).delete("jwt");
     return null;
   }
 }

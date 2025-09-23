@@ -26,7 +26,7 @@ export default async function ProfilePage() {
           </p>
         </div>
       </div>
-      <UserFormComponent user={user} changeEmail />
+      <UserFormComponent user={user} />
     </div>
   );
 }
