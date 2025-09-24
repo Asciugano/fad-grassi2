@@ -9,8 +9,8 @@ export default function NavBar() {
   const [logged, setLogged] = useState(false)
 
   useEffect(() => {
-    axios.get('/api/auth/login')
-      .then((res) => setLogged(res.data.logged))
+    axios.post('/api/auth/me')
+      .then((res) => setLogged(true))
       .catch(() => setLogged(false));
   }, []);
 
