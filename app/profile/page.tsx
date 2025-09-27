@@ -44,6 +44,13 @@ export default async function ProfilePage() {
             <span className="text-amber-400">{numberOfCourse}</span>
             {" "}Corsi
           </p>
+
+          <div>
+            <p className="mt-8 text-sm">
+              Primo accesso: {" "}
+              <span className="text-amber-400">{user.created_at.toLocaleDateString()}</span>
+            </p>
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-center mt-8">
