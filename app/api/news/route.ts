@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   return NextResponse.json({ news });
 }
 
-export default async function GET() {
+export async function GET() {
   const userId = await getUserIDFromToken();
 
   if (!userId)
@@ -73,8 +73,13 @@ export default async function GET() {
         in: courses.map((c) => c.id),
       },
     },
+    include: {
+      course: true,
+    },
   });
 
   if (!news)
     return NextResponse.json({ error: true, message: "Errore nella ricerca degli annunci" }, { status: 500 });
+
+  return NextResponse.json({ news });
 }
