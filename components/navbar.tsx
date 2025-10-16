@@ -10,7 +10,7 @@ export default function NavBar() {
 
   useEffect(() => {
     axios.post('/api/auth/me')
-      .then((res) => setLogged(true))
+      .then(() => setLogged(true))
       .catch(() => setLogged(false));
   }, []);
 

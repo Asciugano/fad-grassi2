@@ -3,7 +3,7 @@
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { News, Course } from "@/lib/generated/prisma";
+import { News } from "@/lib/generated/prisma";
 import Link from "next/link";
 
 export default function NewsListComponent({ news: initalNews }: { news?: News[] }) {

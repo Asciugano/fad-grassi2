@@ -13,6 +13,8 @@ export default async function NewsByCoursePage({
   const userId = await getUserIDFromToken();
   if (!userId)
     notFound();
+
+  // TODO: implementare **REDIS**
   const course = await prisma.course.findFirst({
     where: {
       AND: [
@@ -35,6 +37,8 @@ export default async function NewsByCoursePage({
     },
   });
 
+
+  // TODO: implementare **REDIS**
   const news = await prisma.news.findMany({
     where: {
       courseId: course?.id,

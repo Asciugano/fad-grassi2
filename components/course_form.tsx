@@ -7,24 +7,28 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function CourseForm({ create }: { create: boolean }) {
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
+  // form data
+  const [name, setName] = useState(""); // nome del nuovo corso
+  const [code, setCode] = useState(""); // codice per iscriversi al corso
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // pulsante per vedere o nascondere la password
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // creazione del router per poter fare i redirect
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
+    // creazione del corso
     if (create) {
       try {
         await axios.post('/api/courses/new', { name, password });
       } catch (e) {
+        // impostazione per il messaggio di errore
         const err = e as AxiosError<{ message: string }>
 
         if (err.response?.data.message)
@@ -37,10 +41,12 @@ export default function CourseForm({ create }: { create: boolean }) {
         setLoading(false);
       }
     }
+    // iscrizione al corso
     else {
       try {
         await axios.post('/api/courses/join', { code, password });
       } catch (e) {
+        // impostazione per il messaggio di errore
         const err = e as AxiosError<{ message: string }>
 
         if (err.response?.data.message)
@@ -54,6 +60,7 @@ export default function CourseForm({ create }: { create: boolean }) {
       }
     }
 
+    // se non ci sono errori redirec alla pagina dei corsi
     if (!error || error.length <= 0)
       router.push("/courses");
   }

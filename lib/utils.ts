@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 
+// generazione del token jwt con l'userID (durata 1h)
 export async function generateToken(userID: string) {
   const token = await jwt.sign({ userID }, process.env.JWT_SECRET, {
     expiresIn: "1h",
@@ -11,15 +12,18 @@ export async function generateToken(userID: string) {
 }
 
 export async function getUserIDFromToken() {
+  // ricerca del jwt nei cookies
   const cookiesStore = cookies();
   const token = (await cookiesStore).get("jwt")?.value;
 
   if (!token) return null;
 
   try {
+    // verifica e estrazionde (dell'userID) dal jwt
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as { userID: string }
     return decoded.userID;
   } catch (e) {
+    // in caso di errore rimozione del token
     console.error(e);
     const cookiesStore = cookies();
     (await cookiesStore).delete("jwt");
@@ -27,6 +31,7 @@ export async function getUserIDFromToken() {
   }
 }
 
+// generazione del codice per iscriversi ad un corso
 function generateCourseCode(len = 6) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code = "";
@@ -37,6 +42,7 @@ function generateCourseCode(len = 6) {
   return code;
 }
 
+// generazione del codice unico per iscriversi ad un corso
 export async function generateUniqueCourseCode() {
   let code;
   let exsist = true;

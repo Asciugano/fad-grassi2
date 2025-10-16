@@ -7,8 +7,10 @@ import { getUserIDFromToken } from "@/lib/utils";
 
 export default async function CourseComponent({ course }: { course: Course }) {
   const teacher = await prisma.user.findUnique({ where: { id: course.teacherId } })
+  // TODO: implementare **REDIS**
   const homeworks = await prisma.homeWork.findMany({ where: { courseId: course.id } });
 
+  // ricerca dell'utente loggato
   const userId = await getUserIDFromToken();
   let user = null;
   if (userId)

@@ -7,14 +7,17 @@ export async function POST(req: Request) {
   const { username, email, password, role } = await req.json();
 
   try {
+    // controllo se esiste gua un utente con la stessa mail
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
     if (existingUser)
       return NextResponse.json({ error: true, message: "Esiste gia' un utente con questo username" }, { status: 401 });
 
+    // hashing della password (non salvata in plain)
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // creazione dell'utente nel DB
     const user = await prisma.user.create({
       data: {
         username,
@@ -27,12 +30,13 @@ export async function POST(req: Request) {
     if (!user)
       return NextResponse.json({ error: true, message: "Errore nella creazione dell'utente" }, { status: 500 });
 
+    // creazione e utilizzo del token jwt
     const token = await generateToken(user.id);
     const res = NextResponse.json({ message: "Utente creato con successo", token });
     res.cookies.set("jwt", token, {
       httpOnly: process.env.NEXT_ENV === "dev",
       path: "/",
-      maxAge: 60 * 60,
+      maxAge: 60 * 60, // 1h
       sameSite: "strict",
       secure: process.env.NEXT_ENV !== "dev",
     });

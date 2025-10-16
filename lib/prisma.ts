@@ -9,4 +9,5 @@ const prisma = globalForPrisma.prisma || new PrismaClient().$extends(withAcceler
 
 if (process.env.NEXT_ENV === "dev") globalForPrisma.prisma = prisma;
 
+// istanza di prisma per utilizzare il DB
 export { prisma };

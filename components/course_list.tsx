@@ -15,10 +15,12 @@ export function CoursesList() {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
+    // caricamento dei corsi
     setLoading(true);
     axios.get('/api/courses')
       .then((res) => res.data)
       .then((data) => setCourses(data.allCourses))
+      // preparazione del messaggio di errore
       .catch((e) => {
         const err = e as AxiosError<{ message: string }>
 
@@ -32,8 +34,10 @@ export function CoursesList() {
       .finally(() => setLoading(false));
 
     axios.post("/api/auth/me", {})
+      // caricamento del profilo dell'utente
       .then((res) => res.data)
       .then((data) => setUser(data.user))
+      // preparazione del messaggio di errore
       .catch((e) => {
         setUser(null);
         const err = e as AxiosError<{ message: string }>;
