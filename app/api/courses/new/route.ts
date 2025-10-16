@@ -1,5 +1,6 @@
-import { UserRole } from "@/lib/generated/prisma";
+import { Course, UserRole } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/prisma";
+import redis, { getOrSetCache } from "@/lib/redis";
 import { generateUniqueCourseCode, getUserIDFromToken } from "@/lib/utils";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -37,6 +38,18 @@ export async function POST(req: Request) {
 
   if (!course)
     return NextResponse.json({ error: true, message: "Errore durante la creazione del corso" }, { status: 500 });
+
+
+  await redis.del(`createdCourses:${userId}`);
+  await getOrSetCache<Course[]>(`createdCourses:${userId}`, async () => {
+    const data = await prisma.course.findMany({
+      where: { teacherId: userId }
+    });
+
+    return data
+  });
+
+
 
   return NextResponse.json({ course });
 }

@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { Course } from "@/lib/generated/prisma";
+import redis, { getOrSetCache } from "@/lib/redis";
 import { getUserIDFromToken } from "@/lib/utils";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -49,5 +51,18 @@ export async function POST(req: Request) {
       userId: userId,
       courseId: course.id,
     },
+  });
+
+  await redis.del(`enrollments:${userId}`);
+  await getOrSetCache<Course[]>(`enrollments:${userId}`, async () => {
+    const data = await prisma.course.findMany({
+      where: {
+        enrollments: {
+          some: { userId: userId },
+        },
+      },
+    });
+
+    return data;
   });
 }
