@@ -32,7 +32,7 @@ export default async function CourseComponent({ course }: { course: Course }) {
 
           <div className="flex gap-4">
             <Link
-              href="/news"
+              href={`/news/course/${course.name}`}
               className="flex items-center gap-2 text-sm text-white bg-amber-400 hover:bg-amber-300 rounded-lg px-2 py-1 shadow-md"
             >
               <BookOpen size={18} />
